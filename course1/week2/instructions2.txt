@@ -1,0 +1,41 @@
+# Create virtual environment
+mkvirtualenv django3 --python=/usr/bin/python3.8
+pip install django==3.2.5
+
+# In case I leave, to reenter the virtual environment:
+workon django3
+
+
+# Clone code
+cd ~
+git clone https://github.com/csev/dj4e-samples
+cd dj4e-samples
+pip install -r requirements.txt
+python3 manage.py check
+
+
+python3 manage.py makemigrations
+python3 manage.py migrate
+
+# Create a new project
+cd ~
+mkdir django_projects
+cd django_projects
+django-admin startproject mysite
+
+# vim ~/django_projects/mysite/mysite/settings.py
+# modify ALLOWED_HOSTS = [ '*' ]
+
+# Advise: link to -> Start a console in this virtualenv
+
+# /var/www/aorsini_pythonanywhere_com_wsgi.py
+    import os
+    import sys
+
+    path = os.path.expanduser('~/django_projects/mysite')
+    if path not in sys.path:
+        sys.path.insert(0, path)
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'
+    from django.core.wsgi import get_wsgi_application
+    from django.contrib.staticfiles.handlers import StaticFilesHandler
+    application = StaticFilesHandler(get_wsgi_application())
